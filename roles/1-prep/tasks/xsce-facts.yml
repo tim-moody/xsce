@@ -1,0 +1,17 @@
+- name: Discover LAN iface
+  set_fact:
+     xsce_lan_iface: ""
+     
+  set_fact:
+     xsce_lan_iface: "{{ item.1 }}"
+  when: item.1  != "lo" and  "{{ item.1 }}" != "{{ ansible_default_ipv4.interface }}"
+  with_indexed_items: ansible_interfaces
+
+- name: Compute ansible interface var name
+  set_fact:
+     ansible_xsce_lan_iface: "ansible_{{ xsce_lan_iface }}"
+  when: xsce_lan_iface != ""
+  
+# To Do 
+#  - handle case where there are more than 2 nics
+#  - handle case where lan nic exists but is down
