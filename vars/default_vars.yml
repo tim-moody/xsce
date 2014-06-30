@@ -1,14 +1,10 @@
 #Network
-lan_ip: 172.18.96.1
-lan_netmask: 255.255.224.0
-
-watchdog: 
-  - sshd
-  - idmgr
-  - ejabberd 
-  - httpd
-  - postgresql
-  - squid 
+#Read docs/NETWORKING.rst
+xsce_hostname: schoolserver
+xsce_domain: lan
+xsce_lan_ip: 172.18.96.1
+xsce_lan_netmask: 255.255.224.0
+xsce_gw_allowed: True
 
 #Gateway Filters
 gw_squid_whitelist: False
@@ -36,10 +32,14 @@ vpn_presence: unleashkids.org
 openvpn_install: true
 openvpn_enable: false
 
-#Network variables
-#Read docs/NETWORKING.rst
-xsce_wan_iface: "{{ ansible_default_ipv4.interface }}"
-xsce_lan_iface: auto
+# For Monit
+watchdog: 
+  - sshd
+  - idmgr
+  - ejabberd 
+  - httpd
+  - postgresql
+  - squid 
 
 # for role xovis
 xovis_target_host: "127.0.0.1:5984"

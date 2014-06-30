@@ -1,3 +1,4 @@
+- include: xsce-facts.yml tags=facts
 - include: prep.yml
 
 # Put conditional includes for platforms here

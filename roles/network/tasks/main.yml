@@ -1,70 +1,4 @@
-- name: Discover LAN iface
-  shell: /sbin/ip link show  | grep -v -e DOWN -e lo -e {{ ansible_default_ipv4.alias }}| grep mtu | awk -F":" '{print \$2}' |  tr -d ' '  | head -n1 
-  register: discovered_lan
-  
-  changed_when: false
-  tags:
-    - network-discover
-    - gateway
-    - dhcpd
-    - ajenti
-    - wondershaper
-    - core
-    - xo
-    - download
-    - services
-    - squid
-
-
-- name: Set xsce configured lan fact
-  set_fact:
-     xsce_lan_iface: "{{ xsce_lan_iface }}"
-  when: 'xsce_lan_iface != "auto" and xsce_lan_iface != "none" '
-  tags:
-    - network-discover
-    - gateway
-    - dhcpd
-    - ajenti
-    - wondershaper
-    - core
-    - xo
-    - download
-    - services
-    - squid
-
-- name: Set xsce discovered lan fact
-  set_fact:
-     xsce_lan_iface: "{{ discovered_lan.stdout }}"
-  when: 'xsce_lan_iface == "auto"  and discovered_lan.stdout  != ""'
-  tags:
-    - network-discover
-    - gateway
-    - dhcpd
-    - ajenti
-    - wondershaper
-    - core
-    - xo
-    - download
-    - services
-    - squid
-
-
-- name: No LAN configured - Appliance mode
-  set_fact:
-     xsce_lan_iface: ""
-  when: 'xsce_lan_iface == "none" or (discovered_lan.stdout == "" and xsce_lan_iface == "auto" )'
-  tags:
-    - network-discover
-    - gateway
-    - dhcpd
-    - ajenti
-    - wondershaper
-    - core
-    - xo
-    - download
-    - services
-    - squid
-
+# Facts are discovered by Ansible and in xsce-facts.yml which also computes networking values to use
 
 - name: Create xs network flags
   template: backup=yes
@@ -87,25 +21,12 @@
             group=root
             mode=0644
 
-#TODO: Use vars instead of hardcoded values
 - name: Configure /etc/hosts
-  lineinfile: backup=yes
-              dest=/etc/hosts
-              regexp='^172\.18\.96\.1'
-              line='172.18.96.1            {{ xsce_hostname }}.{{ xsce_domain }}      {{ xsce_hostname }}'
-              owner=root
-              group=root
-              mode=0644
-
-- name: Configure /etc/hosts
-  lineinfile: backup=yes
-              dest=/etc/hosts
-              regexp='^127\.0\.0\.1'
-              line='127.0.0.1            localhost.localdomain   localhost   {{ xsce_hostname }}'
-              owner=root
-              group=root
-              mode=0644
-
+  template: src=hosts.j2
+            dest=/etc/hosts
+            owner=root
+            group=root
+            mode=0644            
 
 - name: Configure lan interface
   template: backup=yes

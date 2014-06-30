@@ -1,3 +1,10 @@
+#Network variables
+#Read docs/NETWORKING.rst
+
+- name: Set WAN Interface
+  set_fact:
+     xsce_wan_iface: "{{ ansible_default_ipv4.interface }}"
+          
 - name: Discover LAN iface
   set_fact:
      xsce_lan_iface: ""
@@ -11,7 +18,15 @@
   set_fact:
      ansible_xsce_lan_iface: "ansible_{{ xsce_lan_iface }}"
   when: xsce_lan_iface != ""
-  
+
+- name: Determine Gateway Mode (True) or Appliance (False)
+  set_fact:
+     xsce_gateway_mode: True
+  set_fact:
+     xsce_gateway_mode: False
+  when: xsce_lan_iface == "" or xsce_gw_allowed == False
+    
 # To Do 
 #  - handle case where there are more than 2 nics
 #  - handle case where lan nic exists but is down
+#  - allow override of LAN interface
