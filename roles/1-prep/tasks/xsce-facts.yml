@@ -19,12 +19,11 @@
      ansible_xsce_lan_iface: "ansible_{{ xsce_lan_iface }}"
   when: xsce_lan_iface != ""
 
+# Gateway Mode is iniitalized in default_vars to same value as xsce_gateway_allowed
 - name: Determine Gateway Mode (True) or Appliance (False)
   set_fact:
-     xsce_gateway_mode: True
-  set_fact:
      xsce_gateway_mode: False
-  when: xsce_lan_iface == "" or xsce_gw_allowed == False
+  when: xsce_lan_iface == "" or xsce_gateway_allowed == False
     
 # To Do 
 #  - handle case where there are more than 2 nics

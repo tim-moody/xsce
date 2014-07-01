@@ -4,7 +4,9 @@ xsce_hostname: schoolserver
 xsce_domain: lan
 xsce_lan_ip: 172.18.96.1
 xsce_lan_netmask: 255.255.224.0
-xsce_gw_allowed: True
+xsce_gateway_allowed: True
+# This variable is here so is defined
+xsce_gateway_mode: "{{ xsce_gateway_allowed }}"
 
 #Gateway Filters
 gw_squid_whitelist: False
