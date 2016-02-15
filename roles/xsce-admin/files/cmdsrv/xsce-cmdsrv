@@ -539,6 +539,7 @@ def cmd_handler(cmd_msg):
         "GET-CONF": get_config_vars,
         "SET-CONF": set_config_vars,
         "GET-MEM-INFO": get_mem_info,
+        "GET-SPACE-AVAIL": get_space_avail,
         "GET-STORAGE-INFO": get_storage_info,
         "RUN-ANSIBLE": run_ansible,
         "GET-JOB-STAT": get_last_jobs_stat,
@@ -596,7 +597,7 @@ def cmd_handler(cmd_msg):
     # bad_command = validate_command(cmd_args)
 
     # uncomment for testing
-    #resp = avail_cmds[cmd](cmd_info)
+    resp = avail_cmds[cmd](cmd_info)
 
     # uncomment for production
     if cmd in avail_cmds:
@@ -735,6 +736,23 @@ def get_mem_info(cmd_info):
     outp = subprocess.check_output(["/usr/bin/free", "-h"])
     json_outp = json_array("system_memory", outp)
     return (json_outp)
+def get_space_avail(cmd_info):
+    space_avail = {}
+    libr_avail = 0
+    cmd = "df"
+    cmd_args = shlex.split(cmd)
+    outp = subprocess.check_output(cmd_args)
+    dev_arr = outp.split('\n')
+    for dev_str in dev_arr[1:-1]:
+       dev_attr = dev_str.split()
+       if dev_attr[5] == '/':
+           root_avail = dev_attr[3]
+       if dev_attr[5] == '/library':
+           libr_avail = dev_attr[3]
+    space_avail['root'] = root_avail
+    space_avail['library'] = libr_avail
+    resp = json.dumps(space_avail)
+    return (resp)
 
 def get_storage_info(cmd_info):
     system_storage = []
