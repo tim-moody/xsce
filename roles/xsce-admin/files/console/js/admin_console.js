@@ -108,19 +108,6 @@ function controlButtonsEvents() {
   // Configuration Buttons
 
 function configButtonsEvents() {
-  $("#Bad-CMD").click(function(){
-    sendCmdSrvCmd("XXX", testCmdHandler);
-  });
-
-  $("#Test-CMD").click(function(){
-    //sendCmdSrvCmd("TEST ;", testCmdHandler);
-    getJobStat();
-  });
-
-  $("#List-CMD").click(function(){
-  	// xsce-cmdsrv-ctl LIST-LIBR '{"sub_dir":"downloads/zims"}'
-    sendCmdSrvCmd("LIST", listCmdHandler);
-  });
 
   $("#SET-CONF-CMD").click(function(){
     make_button_disabled("#SET-CONF-CMD", true);
